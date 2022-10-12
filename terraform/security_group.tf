@@ -4,7 +4,7 @@
   vpc_id      = aws_vpc.vpc.id
 
   dynamic "ingress" {
-    for_each = ["80", "443", "8080", "8081"]
+    for_each = ["80", "443", "8080", "8081" , "4444"]
     content {
       from_port   = ingress.value
       to_port     = ingress.value

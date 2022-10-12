@@ -1,6 +1,6 @@
 
 {
-	"chrome_version" : "102",
+	"chrome_version" : "105.0",
 	"browserName" : "chrome",
 	"enableVNC" : "true",
 	"enableVideo" : "true",

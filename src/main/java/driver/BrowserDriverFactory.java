@@ -31,7 +31,7 @@ public class BrowserDriverFactory  extends TestUtilities {
 	protected static final String  BROWSERVERSION  = "browserVersion";
 	protected static final String  ENABLE_VNC  = "enableVNC";
 	protected static final String  ENABLE_VIDEO  = "enableVideo";
-	protected static final String SELENOIDPROP="src/main/resources/infrastructure.json";
+	protected static final String SELENOIDPROP="src/main/resources/Selenoid_properties.json";
 	protected static final String DISABLENOTOFOCATIONS="--disable-notifications";
 	protected static final String DISABLEGPU="--disable-gpu";
 	protected static final String DEVICENAME="deviceName";
@@ -84,7 +84,7 @@ public class BrowserDriverFactory  extends TestUtilities {
 				chromeOptions.setCapability("sessionTimeout","10m");
 
 				try {
-					driver = new RemoteWebDriver(URI.create(ip_selenoid("terraform/ip_output.txt")).toURL(),
+					driver = new RemoteWebDriver(URI.create("http://"+ip_selenoid("src/main/resources/ip_output.txt")+":4444/wd/hub/").toURL(),
 							chromeOptions);
 				} catch (MalformedURLException e) {
 					log.error("create driver is faild");
