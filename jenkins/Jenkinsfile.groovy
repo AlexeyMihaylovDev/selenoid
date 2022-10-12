@@ -14,7 +14,7 @@ import groovy.transform.Field
 JOB.git_project_url = "https://github.com/AlexeyMihaylovDev/selenoid.git"
 JOB.project_name = "terraform_bot_test"
 JOB.devops_sys_user = "my_polybot_key"
-JOB.branch = "master"
+JOB.branch = "test_project"
 JOB.email_recepients = "mamtata2022@gmail.com" //TODO: add all developers of projects
 
 
@@ -79,14 +79,14 @@ pipeline {
                     JOB.Build_Type = userInput["Build_Type"]
                     JOB.apply = userInput['Continue_apply']
                     JOB.deploy = userInput['run_tests']
-                    println(JOB.params.modules)
+
                 }
             }
         }
         stage('Clone') {
             steps {
                 script {
-
+                    println("===================================${STAGE_NAME}=============================================")
                     // Clone PolyBot repository.
                     git branch: "${JOB.branch}", url: "${JOB.git_project_url}"
                     JOB.gitCommitHash = global_gitInfo.getCommitHash(JOB.branch)
@@ -112,42 +112,72 @@ pipeline {
                 }
             }
         }
+        stage("Install Ansible") {
+            when { expression { JOB.apply == true } }
+            steps {
+                sh'''
+              apt-get update && \
+              apt-get install -y ansible
+            '''
+
+                sh '/usr/bin/ansible-galaxy collection install community.general'
+            }
+        }
         stage('Deploy framework on AWS') {
             when { expression { JOB.apply == true } }
             steps {
                 script {
                     println("===================================${STAGE_NAME}=============================================")
                     dir('terraform') {
-                        sh ' terraform apply "myplan.txt"'
-                        sh 'terraform output -json > ./infrastructure.json'
+                        sh 'terraform apply "myplan.txt"'
+                        sh 'terraform output -json > output.json'
+                        sh 'python3  readJson.py'
+                        sh 'cp ip_output.txt  $WORKSPACE/src/main/resources/'
                     }
                 }
             }
         }
-    }
-        post {
-
-            always {
+        stage('Run tests ') {
+            steps {
                 script {
-                    currentBuild.description = ("Branch : ${JOB.branch}\n GitCommiter : ${JOB.commitAuthor}\nDeploy_server: ${JOB.apply}")
-
-                    EMAIL_MAP = [
-                            "Modules"      : JOB.params.modules,
-                            "Build Type"   : JOB.params.Build_Type,
-                            "Deploy To Env": JOB.params.Deploy_Environment,
-                            "Job Name"     : JOB_NAME,
-                            "Run deploy "  : JOB.apply,
-                            "Build Number" : BUILD_NUMBER,
-                            "Git tag Name" : JOB.tagName,
-                            "Branch"       : "${JOB.branch}",
-                            "More Info At" : "<a href=${BUILD_URL}console> Click here to view build console on Jenkins. </a>",
-                            "painted"      : "false"
-                    ]
-                    global_sendGlobalMail.sendByMapFormat(JOB.email_recepients, currentBuild.result, EMAIL_MAP, JOB.emails,
-                            "Jenkins Report", "Build Notification - Jenkins Report", "BOT build")
-
+                    println("===================================${STAGE_NAME}=============================================")
+                    sh ''
                 }
             }
         }
+
     }
+    post {
+
+        always {
+            script {
+
+                allure([
+                        includeProperties: false,
+                        jdk: '',
+                        properties: [],
+                        reportBuildPolicy: 'ALWAYS',
+                        results: [[path: 'target/allure-results']]
+                ])
+
+                currentBuild.description = ("Branch : ${JOB.branch}\n GitCommiter : ${JOB.commitAuthor}\nDeploy_server: ${JOB.apply}")
+                EMAIL_MAP = [
+                        "Modules"      : JOB.params.modules,
+                        "Build Type"   : JOB.params.Build_Type,
+                        "Deploy To Env": JOB.params.Deploy_Environment,
+                        "Job Name"     : JOB_NAME,
+                        "Run deploy "  : JOB.apply,
+                        "Build Number" : BUILD_NUMBER,
+                        "Git tag Name" : JOB.tagName,
+                        "Branch"       : "${JOB.branch}",
+                        "More Info At" : "<a href=${BUILD_URL}console> Click here to view build console on Jenkins. </a>",
+                        "painted"      : "false"
+                ]
+                global_sendGlobalMail.sendByMapFormat(JOB.email_recepients, currentBuild.result, EMAIL_MAP, JOB.emails,
+                        "Jenkins Report", "Build Notification - Jenkins Report", "BOT build")
+
+            }
+        }
+    }
+}
 
