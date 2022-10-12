@@ -12,6 +12,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +61,7 @@ public class BrowserDriverFactory  extends TestUtilities {
 				chromeOptions.setAcceptInsecureCerts(true);
 				WebDriverManager.chromedriver().setup();
 				driver = new ChromeDriver(chromeOptions);
-				driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+				driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 				driver.manage().window().maximize();
 				break;
 			case "firefox":
@@ -82,32 +83,14 @@ public class BrowserDriverFactory  extends TestUtilities {
 				chromeOptions.addArguments(SHMSIZE);
 				chromeOptions.setCapability("sessionTimeout","10m");
 
-				switch (numServer){
-					case "1":
-						log.info("create driver on 192.168.99.171 server");
-						list.add("www.mitchatnim.co.il:192.168.99.171");
-						list.add("mitchatnim.co.il:192.168.99.171");
-						list.add("mb.mitchatnim.co.il:192.168.99.171");
-						list.add("preview.mitchatnim.co.il:192.168.99.171");
-						chromeOptions.setCapability("hostsEntries",list);
-						break;
-					case "2":
-						log.info("create driver on 192.168.99.172 server");
-						list.add("www.mitchatnim.co.il:192.168.99.172");
-						list.add("mitchatnim.co.il:192.168.99.172");
-						list.add("mb.mitchatnim.co.il:192.168.99.172");
-						list.add("preview.mitchatnim.co.il:192.168.99.172");
-						chromeOptions.setCapability("hostsEntries",list);
-						break;
-				}
 				try {
-					driver = new RemoteWebDriver(URI.create(dJson(SELENOIDPROP).readData("selenoid_work_ip")).toURL(),
+					driver = new RemoteWebDriver(URI.create(ip_selenoid("terraform/ip_output.txt")).toURL(),
 							chromeOptions);
 				} catch (MalformedURLException e) {
 					log.error("create driver is faild");
 
 				}
-				driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+				driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 				driver.manage().window().setSize(new Dimension(1920,1080));
 				break;
 

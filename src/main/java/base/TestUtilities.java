@@ -1,15 +1,12 @@
 package base;
 
 import excelData.JSONReader;
+import excelData.ReadFile;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.DataProvider;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -21,8 +18,12 @@ public class TestUtilities extends BaseTest {
 
 
 
+    ReadFile read_file = new ReadFile();
 
-
+	protected String ip_selenoid(String path){
+		String instance_ip =read_file.IP_instance(path);
+	return 	instance_ip;
+	}
 
 	protected void openUrl(String url) {
 		log.info("get new site by url:  "+url);
@@ -52,7 +53,6 @@ public class TestUtilities extends BaseTest {
 		JSONReader readJ = new JSONReader(JsonPath);
 		return readJ;
 	}
-
 
 
 	/** Switch to iFrame using it's locator */
