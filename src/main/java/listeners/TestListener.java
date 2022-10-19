@@ -31,7 +31,7 @@ public class TestListener extends TestUtilities implements ITestListener, IInvok
             WebDriver driver = currentCase.getDriver();
             log.info(testMethodName.get()+"is Success and screenshot taken ");
             Allure.addAttachment(testMethodName.get(), new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
-            String URL_FILE_TO_VIDEO= "http://"+ip_selenoid("src/main/resources/ip_output.txt")+":4444/video/"+((RemoteWebDriver)driver).getSessionId();
+            String URL_FILE_TO_VIDEO= "http://"+ip_selenoid("src/main/resources/ip_output.txt")+":4444/video/"+((RemoteWebDriver)driver).getSessionId()+".mp4";
             Allure.addAttachment("url for Success video","text/uri-list",URL_FILE_TO_VIDEO);
 
         }
@@ -41,7 +41,7 @@ public class TestListener extends TestUtilities implements ITestListener, IInvok
             WebDriver driver = currentCase.getDriver();
             log.info(testMethodName.get()+"is Faild and screenshot taken ");
             Allure.addAttachment(testMethodName.get(), new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
-            String URL_FILE_TO_VIDEO= "http://"+ip_selenoid("src/main/resources/ip_output.txt")+":4444/video/"+((RemoteWebDriver)driver).getSessionId();
+            String URL_FILE_TO_VIDEO= "http://"+ip_selenoid("src/main/resources/ip_output.txt")+":4444/video/"+((RemoteWebDriver)driver).getSessionId()".mp4";
             Allure.addAttachment("url for faild video","text/uri-list",URL_FILE_TO_VIDEO);
 
 
