@@ -81,6 +81,19 @@ pipeline {
                 }
             }
         }
+        stage('Auto input') {
+            when{ expression { params.Build_Type == "auto_trigger"}}
+
+            steps {
+                script {
+                    JOB.params.Build_Type = "Build_Type_automaticly"
+                    JOB.apply = true
+                    JOB.run_tests = true
+
+
+                }
+            }
+        }
         stage('Clone') {
             steps {
                 script {
@@ -127,7 +140,7 @@ pipeline {
         stage('Wait to loading selenoid framework'){
             when { expression { JOB.apply == true } }
             steps{
-                sleep(time:120,unit:"SECONDS")
+                sleep(time:180,unit:"SECONDS")
             }
 
         }
