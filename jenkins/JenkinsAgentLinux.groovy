@@ -37,10 +37,8 @@ pipeline {
     }
 
     agent {
-        docker {
-            image '352708296901.dkr.ecr.eu-central-1.amazonaws.com/alexey_jenk_agent:maven1'
+        node {
             label 'linux'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
@@ -112,17 +110,6 @@ pipeline {
                 }
             }
         }
-        stage("Install Python & Ansible") {
-            when { expression { JOB.apply == true } }
-            steps {
-                sh'''
-              apt-get update && \
-              apt-get install -y ansible
-            '''
-
-                sh '/usr/bin/ansible-galaxy collection install community.general'
-            }
-        }
         stage('Deploy framework on AWS') {
             when { expression { JOB.apply == true } }
             steps {
@@ -136,6 +123,13 @@ pipeline {
                     }
                 }
             }
+        }
+        stage('Wait to loading selenoid framework'){
+            when { expression { JOB.apply == true } }
+            steps{
+                sleep(time:120,unit:"SECONDS")
+            }
+
         }
         stage('Run tests on selenoid servers') {
             when { expression { JOB.run_tests == true } }
