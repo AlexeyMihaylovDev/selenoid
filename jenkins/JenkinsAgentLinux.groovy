@@ -89,6 +89,7 @@ pipeline {
                     JOB.params.Build_Type = "Build_Type_automaticly"
                     JOB.apply = true
                     JOB.run_tests = true
+                    JOB.Build_Type = 'plan'
 
 
                 }
@@ -107,6 +108,7 @@ pipeline {
 
         }
         stage("Run Terraform command ") {
+
             steps {
                 script {
                     println("===================================${STAGE_NAME} : ${JOB.Build_Type} =============================================")

@@ -72,7 +72,7 @@ public class BrowserDriverFactory  extends TestUtilities {
 				break;
 			case "selenoid":
 				chromeOptions.setCapability(BROWSERNAME, dJson(SELENOIDPROP).readData("browserName"));
-				chromeOptions.setCapability(BROWSERVERSION, browser_ver);
+//				chromeOptions.setCapability(BROWSERVERSION, browser_ver);
 				chromeOptions.setAcceptInsecureCerts(true);
 				chromeOptions.setCapability(ENABLE_VNC, true);
 				chromeOptions.setCapability(ENABLE_VIDEO, true);

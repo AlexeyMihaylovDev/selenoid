@@ -48,7 +48,7 @@ public abstract class BaseTest {
 	@Parameters({"browser", "URL", "select_phone", "device", "appiumServer", "systemPort", "platformVersion", "deviceName", "platformName", "WdaLocalPort","numServer","browser_ver"})
 	@BeforeMethod(alwaysRun = true)
 	public void setUp(Method method,@Optional("chrome") String browser, String URL, ITestContext ctx, String select_phone, String device, String appiumServer, String systemPort, String platformVersion
-			, String deviceName, String platformName, String WdaLocalPort,@Optional("51")String numServer,@Optional("105.0")String browser_ver)  {
+			, String deviceName, String platformName, String WdaLocalPort,@Optional("51")String numServer,@Optional("107.0")String browser_ver)  {
 		testName = ctx.getCurrentXmlTest().getName();
 		testSuiteName = ctx.getSuite().getName();
 		log = LogManager.getLogger(getTestMethodName());

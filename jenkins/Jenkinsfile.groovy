@@ -87,7 +87,7 @@ pipeline {
             steps {
                 script {
                     println("===================================${STAGE_NAME}=============================================")
-                    // Clone PolyBot repository.
+                    // Clone Test repository.
                     git branch: "${JOB.branch}", url: "${JOB.git_project_url}"
                     JOB.gitCommitHash = global_gitInfo.getCommitHash(JOB.branch)
                     println("====================${JOB.gitCommitHash}==============")
